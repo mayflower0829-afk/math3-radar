@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1F2430">
+  <meta name="description" content="数三雷达 — 考研数学三历年真题考点考频分析 × 个性化复习优先级排序。数据均标注来源。">
+  <title>数三雷达 · 考研数学三考频分析与复习优先级</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234F6EF2'/><text x='50' y='70' font-size='48' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>∑3</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="appHeader">
+  <div class="brand">
+    <h1>数三雷达 <span class="en">Math3 Radar</span></h1>
+    <span class="sub">考研数学三 · 考点考频分析 × 复习优先级</span>
+  </div>
+</header>
+
+<nav id="tabnav">
+  <button data-tab="overview" class="active">考频总览</button>
+  <button data-tab="trend">命题趋势</button>
+  <button data-tab="priority">我的优先级</button>
+  <button data-tab="about">数据说明</button>
+</nav>
+
+<main id="main">
+
+  <!-- ========== 考频总览 ========== -->
+  <section id="tab-overview" class="tab active">
+    <div class="stat-row" id="metaStats"></div>
+    <div class="card">
+      <div class="card-title">三大学科实际占比 vs 考纲比例</div>
+      <div id="subjectCards" class="subject-cards"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">章节 × 年份 分值热力图</div>
+      <p class="hint">颜色越深分值越高；空白表示该年数据缺失。纵轴按学科分组排列。</p>
+      <div id="chartHeat" class="chart-tall"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">章节年均分值排行</div>
+      <p class="hint">颜色代表所属学科；仅统计有数据年份的平均值。</p>
+      <div id="chartTop" class="chart-tall"></div>
+    </div>
+  </section>
+
+  <!-- ========== 命题趋势 ========== -->
+  <section id="tab-trend" class="tab">
+    <div class="card">
+      <div class="card-title">三大学科分值走势（堆叠）</div>
+      <div id="chartArea" class="chart"></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">章节分值走势</div>
+        <select id="subjectSelect"></select>
+      </div>
+      <div id="chartLine" class="chart-tall"></div>
+    </div>
+  </section>
+
+  <!-- ========== 我的优先级 ========== -->
+  <section id="tab-priority" class="tab">
+    <div class="card">
+      <div class="card-title">复习优先级是怎么算的</div>
+      <p class="hint">
+        优先级 = 章节年均分值 ×（6 − 你的掌握度），建议时间占比 = 该章优先级 ÷ 全部章节优先级之和。
+        直觉：分值越重、你越生疏的章节，越该先复习。默认所有章节按掌握度 3（一般）计算，点右侧数字按钮调整。
+        这是最简单的线性加权模型，它的局限见「数据说明」。
+      </p>
+      <button class="btn ghost small" id="btnResetMastery">重置全部掌握度</button>
+    </div>
+    <div id="topAdvice" class="advice"></div>
+    <div id="priorityList"></div>
+  </section>
+
+  <!-- ========== 数据说明 ========== -->
+  <section id="tab-about" class="tab">
+    <div class="card">
+      <div class="card-title">数据从哪来</div>
+      <p class="hint" id="aboutUpdated"></p>
+      <ul class="source-list" id="aboutSources"></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">各年份数据来源</div>
+      <ul class="source-list" id="aboutYears"></ul>
+    </div>
+    <div class="card">
+      <div class="card-title">口径与局限（重要）</div>
+      <div class="hint" id="aboutCaveats"></div>
+    </div>
+  </section>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script src="echarts.min.js?v=1"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
