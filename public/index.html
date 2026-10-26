@@ -41,7 +41,7 @@
     </div>
     <div class="card">
       <div class="card-title">章节 × 年份 分值热力图</div>
-      <p class="hint">颜色越深分值越高；空白表示该年数据缺失。纵轴按学科分组排列。</p>
+      <p class="hint">颜色越深分值越高；空白表示该年数据缺失。纵轴按学科分组排列。年份按考研届别标注（如 2026 = 2025 年 12 月举行的初试）。</p>
       <div id="chartHeat" class="chart-tall"></div>
     </div>
     <div class="card">
@@ -78,7 +78,7 @@
       </p>
       <label style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
         <input type="checkbox" id="wSwitch" style="accent-color:var(--primary);margin-top:3px;">
-        <span><b>近 3 年加权模式</b>：分值 = 0.5 × 近 3 年（2023-2025）均值 + 0.5 × 全期均值。命题趋势在变化、且 2021 年大纲改革后口径有跳变——如果你更相信"最近才代表未来"，打开它。</span>
+        <span><b>近 3 年加权模式</b>：分值 = 0.5 × 近 3 年均值 + 0.5 × 全期均值（当前近 3 年为 <span id="recentYears">…</span>，随数据自动更新）。命题趋势在变化、且 2021 年大纲改革后口径有跳变——如果你更相信"最近才代表未来"，打开它。</span>
       </label>
       <button class="btn ghost small" id="btnResetMastery" style="margin-top:10px;">重置全部掌握度</button>
     </div>

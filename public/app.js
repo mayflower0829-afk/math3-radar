@@ -331,6 +331,8 @@ function init() {
   }
   mastery = loadMastery();
   weighted = localStorage.getItem(W_KEY) === '1';
+  const recentYs = sortedYears().map((y) => y.year).slice(-3);
+  $('recentYears').textContent = recentYs.join(' / ');
   $('wSwitch').checked = weighted;
   $('wSwitch').addEventListener('change', (e) => {
     weighted = e.target.checked;
