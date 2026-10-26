@@ -71,7 +71,11 @@
         直觉：分值越重、你越生疏的章节，越该先复习。默认所有章节按掌握度 3（一般）计算，点右侧数字按钮调整。
         这是最简单的线性加权模型，它的局限见「数据说明」。
       </p>
-      <button class="btn ghost small" id="btnResetMastery">重置全部掌握度</button>
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="wSwitch" style="accent-color:var(--primary);margin-top:3px;">
+        <span><b>近 3 年加权模式</b>：分值 = 0.5 × 近 3 年（2023-2025）均值 + 0.5 × 全期均值。命题趋势在变化、且 2021 年大纲改革后口径有跳变——如果你更相信"最近才代表未来"，打开它。</span>
+      </label>
+      <button class="btn ghost small" id="btnResetMastery" style="margin-top:10px;">重置全部掌握度</button>
     </div>
     <div id="topAdvice" class="advice"></div>
     <div id="priorityList"></div>
@@ -94,6 +98,8 @@
     </div>
   </section>
 </main>
+
+<footer style="text-align:center;font-size:12px;padding:6px 0 26px;"><a href="/" style="color:var(--primary);text-decoration:none;">← 返回作品集主页</a></footer>
 
 <div id="toast" role="status"></div>
 

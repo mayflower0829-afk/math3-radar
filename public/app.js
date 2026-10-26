@@ -47,6 +47,9 @@ function saveMastery() {
   try { localStorage.setItem(MASTERY_KEY, JSON.stringify(mastery)); } catch (e) { /* 隐私模式下静默 */ }
 }
 
+const W_KEY = 'math3Radar.weighted';
+let weighted = false;   // 近3年加权模式开关
+
 // ---------- 统计 ----------
 function sortedYears() {
   return [...getData().years].sort((a, b) => a.year - b.year);
@@ -61,6 +64,15 @@ function chapterStats(name) {
   });
   const total = vals.reduce((s, x) => s + x.v, 0);
   return { vals, total, avg: vals.length ? total / vals.length : 0, count: vals.length };
+}
+
+// 加权模式：0.5 × 近3年（2023-2025）均值 + 0.5 × 全期均值；
+// 关闭时退化为全期均值。近3年不足3个数据点时按已有年份平均。
+function chapterAvg(st) {
+  if (!weighted || st.vals.length === 0) return st.avg;
+  const recent = st.vals.slice(-3).map((x) => x.v);
+  const rAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
+  return 0.5 * rAvg + 0.5 * st.avg;
 }
 
 // 每年三大学科的总分（该年该学科各章之和，缺失记 0）
@@ -239,9 +251,10 @@ function priorityRows() {
     .map((c) => {
       const st = chapterStats(c.name);
       const m = mastery[c.name] == null ? DEFAULT_MASTERY : mastery[c.name];
+      const avg = chapterAvg(st);
       return {
         name: c.name, subject: c.subject, count: st.count,
-        avg: st.avg, mastery: m, priority: st.avg * (6 - m),
+        avg, mastery: m, priority: avg * (6 - m),
       };
     })
     .sort((a, b) => b.priority - a.priority);
@@ -261,7 +274,7 @@ function renderPriority() {
       <div class="p-head">
         <span class="p-name">${esc(r.name)}</span>
         <span class="subject-tag" style="background:${color}">${SUBJECT_SHORT[r.subject] || esc(r.subject)}</span>
-        <span class="p-avg">年均 ${r.avg.toFixed(1)} 分${r.count === 0 ? ' · 暂无数据' : ''}</span>
+        <span class="p-avg">${weighted ? '加权' : '年均'} ${r.avg.toFixed(1)} 分${r.count === 0 ? ' · 暂无数据' : ''}</span>
       </div>
       <div class="p-bar-wrap">
         <div class="p-bar"><div class="p-bar-fill" style="width:${((r.priority / maxP) * 100).toFixed(1)}%;background:${color}"></div></div>
@@ -317,6 +330,14 @@ function init() {
     return;
   }
   mastery = loadMastery();
+  weighted = localStorage.getItem(W_KEY) === '1';
+  $('wSwitch').checked = weighted;
+  $('wSwitch').addEventListener('change', (e) => {
+    weighted = e.target.checked;
+    try { localStorage.setItem(W_KEY, weighted ? '1' : '0'); } catch (err) { /* ignore */ }
+    renderPriority();
+    toast(weighted ? '已切换到近 3 年加权模式' : '已恢复全期均值模式');
+  });
   getData().taxonomy.forEach((g) => {
     g.chapters.forEach((c) => flatChapters.push({ name: c, subject: g.subject }));
   });
