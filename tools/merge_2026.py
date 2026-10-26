@@ -53,7 +53,13 @@ def main():
             meta.setdefault("sources", []).append(s)
     add = meta26.get("caveat_addendum")
     if add:
-        meta["caveats"] = (meta.get("caveats", "") + "\n" + add).strip()
+        cur = meta.get("caveats")
+        if isinstance(cur, list):
+            meta["caveats"] = cur + [add]
+        elif isinstance(cur, str) and cur:
+            meta["caveats"] = cur + "\n" + add
+        else:
+            meta["caveats"] = [add] if not cur else [str(cur), add]
     meta["updated"] = "2026-10-27"
     (BASE / "meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")

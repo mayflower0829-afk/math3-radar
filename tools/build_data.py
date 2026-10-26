@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""把两个项目 data/ 目录下的真实 JSON 转换为 public/data.js。
+"""把本仓库 data/ 下的真实 JSON 转换为 public/data.js（仓库本地版）。
 
 用法：python3 tools/build_data.py
 会在对应 JSON 缺失时跳过该项目并给出提示（保留原有 data.js 不动）。
@@ -18,7 +18,7 @@ def dump_js(path: pathlib.Path, obj, var: str) -> None:
         f"window.{var} = {json.dumps(obj, ensure_ascii=False, indent=2)};\n",
         encoding="utf-8",
     )
-    print(f"OK  {path.relative_to(WS)}")
+    print(f"OK  {path}")
 
 
 def read_json(p: pathlib.Path):
@@ -26,7 +26,7 @@ def read_json(p: pathlib.Path):
 
 
 def build_math3() -> None:
-    base = WS / "math3-radar" / "data"
+    base = WS / "data"
     topics_f, meta_f = base / "topics.json", base / "meta.json"
     if not (topics_f.exists() and meta_f.exists()):
         print("SKIP math3-radar：data/topics.json 或 meta.json 不存在")
@@ -55,11 +55,11 @@ def build_math3() -> None:
         "taxonomy": meta.get("taxonomy"),
         "years": years,
     }
-    dump_js(WS / "math3-radar" / "public" / "data.js", out, "MATH3_DATA")
+    dump_js(WS / "public" / "data.js", out, "MATH3_DATA")
 
 
 def build_mas() -> None:
-    base = WS / "mas-school-guide" / "data"
+    base = WS / "data"
     schools_f, meta_f = base / "schools.json", base / "meta.json"
     if not (schools_f.exists() and meta_f.exists()):
         print("SKIP mas-school-guide：data/schools.json 或 meta.json 不存在")
@@ -78,7 +78,7 @@ def build_mas() -> None:
             "caveats": meta.get("caveats"),
         },
     }
-    dump_js(WS / "mas-school-guide" / "public" / "data.js", out, "MAS_DATA")
+    dump_js(WS / "public" / "data.js", out, "MAS_DATA")
 
 
 if __name__ == "__main__":
