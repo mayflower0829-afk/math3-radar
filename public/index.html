@@ -80,7 +80,12 @@
         <input type="checkbox" id="wSwitch" style="accent-color:var(--primary);margin-top:3px;">
         <span><b>近 3 年加权模式</b>：分值 = 0.5 × 近 3 年均值 + 0.5 × 全期均值（当前近 3 年为 <span id="recentYears">…</span>，随数据自动更新）。命题趋势在变化、且 2021 年大纲改革后口径有跳变——如果你更相信"最近才代表未来"，打开它。</span>
       </label>
-      <button class="btn ghost small" id="btnResetMastery" style="margin-top:10px;">重置全部掌握度</button>
+      <div class="btn-row" style="margin-top:10px;">
+        <button class="btn ghost small" id="btnExportMastery">导出掌握度</button>
+        <button class="btn ghost small" id="btnImportMastery">导入掌握度</button>
+        <button class="btn ghost small" id="btnResetMastery">重置全部掌握度</button>
+      </div>
+      <input type="file" id="masteryFile" accept=".json" hidden>
     </div>
     <div id="topAdvice" class="advice"></div>
     <div id="priorityList"></div>

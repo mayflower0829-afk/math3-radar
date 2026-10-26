@@ -21,6 +21,11 @@ const charts = {};
 
 // ---------- 工具 ----------
 const $ = (id) => document.getElementById(id);
+function todayStr() {
+  const d = new Date();
+  const p = (x) => String(x).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
@@ -360,6 +365,32 @@ function init() {
     renderPriority();
   });
 
+  $('btnExportMastery').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify({ exported: todayStr(), mastery }, null, 2)], { type: 'application/json' });
+    const aEl = document.createElement('a');
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = 'math3radar-mastery-' + todayStr() + '.json';
+    aEl.click();
+    URL.revokeObjectURL(aEl.href);
+    toast('掌握度已导出');
+  });
+  $('btnImportMastery').addEventListener('click', () => $('masteryFile').click());
+  $('masteryFile').addEventListener('change', (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const obj = JSON.parse(reader.result);
+        if (!obj.mastery) throw new Error('格式不符');
+        mastery = obj.mastery;
+        saveMastery();
+        renderPriority();
+        toast('掌握度已导入');
+      } catch (err) { toast('导入失败：' + err.message); }
+    };
+    reader.readAsText(f);
+  });
   $('btnResetMastery').addEventListener('click', () => {
     if (confirm('确定把全部章节掌握度重置为默认值（3）吗？')) {
       mastery = {};
